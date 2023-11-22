@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Control</title>
+</head>
+<body>
+    <button id="captureButton">Capturar Foto</button>
+    <video id="video" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        // Configuração para acessar a câmera do usuário
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(error => {
+                console.error("Erro ao acessar a câmera:", error);
+            });
+
+        // Captura da imagem quando o botão é pressionado
+        document.getElementById('captureButton').addEventListener('click', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataURL = canvas.toDataURL('image/png');
+            // Aqui você pode usar dataURL como quiser, por exemplo, exibir a imagem em um elemento <img>
+            console.log('Imagem capturada:', dataURL);
+        });
+    </script>
+</body>
+</html>
